@@ -1,0 +1,26 @@
+
+PUID="${PUID:-1000}"; export PUID
+PGID="${PGID:-1000}"; export PGID
+
+create_user()
+{
+    pw groupadd -n noroot -g "${PUID}" && \
+    pw useradd -n noroot -d /noroot -u "${PGID}" -g "${pgid}" && \
+    mkdir -p /noroot && \
+    chown noroot:noroot /noroot
+}
+
+warn()
+{
+    echo "##!> $* <!##"
+}
+
+err()
+{
+    echo "###> $* <###"
+}
+
+info()
+{
+    echo "======> $* <======"
+}
