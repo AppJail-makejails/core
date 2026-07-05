@@ -1,0 +1,6 @@
+ARG core_from=ghcr.io/appjail-makejails/core
+ARG core_tag=latest
+
+OPTION start
+OPTION overwrite=force
+OPTION from=${core_from}:${core_tag}
