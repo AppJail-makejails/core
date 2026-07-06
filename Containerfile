@@ -18,7 +18,7 @@ RUN set -xe; \
     \
     if [ -z "${NO_PKGCLEAN}" ]; then \
         pkg clean -a; \
-        rm -rf /var/cache/pkg/* /var/db/pkg/repos/*
+        rm -rf /var/cache/pkg/* /var/db/pkg/repos/*; \
     fi
 
 ENV PUID=1000 \
