@@ -4,9 +4,21 @@ PGID="${PGID:-1000}"; export PGID
 
 create_user()
 {
-    pw groupadd -n noroot -g "${PGID}" && \
-    pw useradd -n noroot -d /noroot -u "${PUID}" -g "${PGID}" && \
-    mkdir -p /noroot && \
+    local errlevel
+
+    if [ ! -d /noroot ]; then
+        pw groupadd -n noroot -g "${PGID}" && \
+        pw useradd -n noroot -d /noroot -u "${PUID}" -g "${PGID}"
+
+        errlevel=$?
+
+        if [ ${errlevel} -ne 0 ]; then
+            return ${errlevel}
+        fi
+
+        mkdir -p /noroot || return $?
+    fi
+
     chown noroot:noroot /noroot
 }
 
