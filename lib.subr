@@ -1,14 +1,30 @@
 
 PUID="${PUID:-1000}"; export PUID
 PGID="${PGID:-1000}"; export PGID
+PUSER="noroot"
+HOMEDIR=/noroot
+
+set_homedir()
+{
+    if [ -z "$1" ]; then
+        err "usage: set_homedir <directory>"
+        exit 1
+    fi
+
+    HOMEDIR="$1"
+}
 
 create_user()
 {
     local errlevel
+    local username
+    local homedir
 
-    if [ ! -d /noroot ]; then
-        pw groupadd -n noroot -g "${PGID}" && \
-        pw useradd -n noroot -d /noroot -u "${PUID}" -g "${PGID}"
+    username=`_pw_usershow "${PUSER}" | cut -d: -f1` || exit $?
+
+    if [ "${username}" = "nouser" ]; then
+        pw groupadd -n "${PUSER}" -g "${PGID}" && \
+        pw useradd -n "${PUSER}" -d "${HOMEDIR}" -u "${PUID}" -g "${PGID}"
 
         errlevel=$?
 
@@ -16,10 +32,23 @@ create_user()
             return ${errlevel}
         fi
 
-        mkdir -p /noroot || return $?
+        mkdir -p "${HOMEDIR}" || return $?
     fi
 
-    chown noroot:noroot /noroot
+    # Maybe the home directory location has been updated.
+    homedir=`_pw_usershow "${PUSER}" | cut -d: -f9` || exit $?
+
+    find -f "${homedir:-${HOMEDIR}}" \! -user "${PUSER}" \! -fstype rdonly -exec chown "${PUSER}" '{}' +
+}
+
+_pw_usershow()
+{
+    if [ -z "$1" ]; then
+        err "usage: _pw_usershow <user>"
+        exit 1
+    fi
+
+    pw usershow -Fn "$1"
 }
 
 warn()
