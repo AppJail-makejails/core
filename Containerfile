@@ -23,7 +23,11 @@ RUN set -xe; \
         pkg clean -a; \
         rm -rf /var/cache/pkg/*; \
     fi; \
-    rm -rf /var/db/pkg/repos/*
+    rm -rf /var/db/pkg/repos/*; \
+    \
+# Prevent permission issues when a package is installed there.
+    mkdir -p /usr/local/sbin; \
+    chmod 755 /usr/local/sbin
 
 ENV PUID=1000 \
     PGID=1000
