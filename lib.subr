@@ -38,7 +38,17 @@ create_user()
     # Maybe the home directory location has been updated.
     homedir=`_pw_usershow "${PUSER}" | cut -d: -f9` || exit $?
 
-    find -f "${homedir:-${HOMEDIR}}" \! -user "${PUSER}" \! -fstype rdonly -exec chown "${PUSER}" '{}' +
+    change_owner "${homedir:-${HOMEDIR}}"
+}
+
+change_owner()
+{
+    if [ -z "$1" ]; then
+        err "usage: change_owner <file>"
+        exit 1
+    fi
+
+    find -f "$1" \! -user "${PUSER}" \! -fstype rdonly -exec chown "${PUSER}" '{}' +
 }
 
 _pw_usershow()
