@@ -48,7 +48,10 @@ change_owner()
         exit 1
     fi
 
-    find -f "$1" \! -user "${PUSER}" \! -fstype rdonly -exec chown "${PUSER}" '{}' +
+    find -f "$1" \
+        \( -fstype rdonly \) -o \
+        \( ! \( -user "${PUID}" -group "${PGID}" \) \
+            -exec echo chown "${PUID}:${PGID}" {} + \)
 }
 
 _pw_usershow()
