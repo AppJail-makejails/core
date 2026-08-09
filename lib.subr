@@ -20,7 +20,7 @@ create_user()
     local username
     local homedir
 
-    username=`_pw_usershow "${PUSER}" | cut -d: -f1` || exit $?
+    username=`_pw_usershow "${PUSER}" | cut -d: -f1` || return $?
 
     if [ "${username}" = "nouser" ]; then
         pw groupadd -n "${PUSER}" -g "${PGID}" && \
@@ -36,7 +36,7 @@ create_user()
     fi
 
     # Maybe the home directory location has been updated.
-    homedir=`_pw_usershow "${PUSER}" | cut -d: -f9` || exit $?
+    homedir=`_pw_usershow "${PUSER}" | cut -d: -f9` || return $?
 
     change_owner "${homedir:-${HOMEDIR}}"
 }
