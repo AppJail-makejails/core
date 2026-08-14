@@ -14,7 +14,7 @@ LABEL org.opencontainers.image.title="FreeBSD base (+tools)" \
 RUN set -xe; \
     \
     pkg update; \
-    pkg install -U \
+    pkg install \
         su-exec-static \
         FreeBSD-utilities \
         FreeBSD-locales; \
