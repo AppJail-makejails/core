@@ -13,6 +13,8 @@ LABEL org.opencontainers.image.title="FreeBSD base (+tools)" \
 
 RUN set -xe; \
     \
+    umask 0022; \
+    \
     pkg update; \
     pkg install \
         su-exec-static \
@@ -30,6 +32,7 @@ RUN set -xe; \
     chmod 755 /usr/local/sbin
 
 ENV PUID=1000 \
-    PGID=1000
+    PGID=1000 \
+    UMASK=0022
 
 COPY lib.subr /lib.subr
