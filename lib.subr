@@ -46,9 +46,19 @@ create_user()
 
 change_owner()
 {
-    if [ -z "$1" ]; then
+    if [ $# -eq 0 ]; then
         err "usage: change_owner <file>"
         exit 1
+    fi
+
+    if [ $# -gt 1 ]; then
+        local file
+
+        for file in "$@"; do
+            change_owner "${file}" || return $?
+        done
+
+        return 0
     fi
 
     find -f "$1" \
