@@ -19,7 +19,9 @@ RUN set -xe; \
     pkg install \
         su-exec-static \
         FreeBSD-utilities \
-        FreeBSD-locales; \
+        FreeBSD-locales \
+        FreeBSD-pam \
+        ca_root_nss; \
     \
     if [ -z "${NO_PKGCLEAN}" ]; then \
         pkg clean -a; \
